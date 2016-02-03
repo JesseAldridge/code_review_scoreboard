@@ -52,6 +52,6 @@ print 'slack_str:', slack_str
 url = (
     'https://slack.com/api/chat.postMessage?token={}'
     '&channel={}&text={}&pretty=1').format(
-    urllib.quote(channel), secrets.slack_api_key, urllib.quote(slack_str))
+    secrets.slack_api_key, urllib.quote(channel), urllib.quote(slack_str))
 print 'url:', url
 requests.post(url)
