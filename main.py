@@ -1,4 +1,4 @@
-import json
+import json, urllib
 
 from requests import auth
 import requests
@@ -44,10 +44,10 @@ slack_str = (
     'https://github.com/JesseAldridge/code_review_scoreboard'.format(
         results, results[0][0] if results and results[0] else 'nobody'))
 
-print 'slack_str:', slack_str
+print 'slack_str:', urllib.quote(slack_str)
 
 url = (
     'https://slack.com/api/chat.postMessage?token={}'
     '&channel=%23_eng_backend&text={}&pretty=1').format(
-    secrets.slack_api_key, urllib.quote(message))
+    secrets.slack_api_key, urllib.quote(slack_str))
 requests.post(url)
