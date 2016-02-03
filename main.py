@@ -8,7 +8,10 @@ import secrets
 testing = False
 
 username = 'JesseAldridge'
-repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api'
+# repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api'
+repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform'
+# channel = '#_eng_backend'
+channel = '#eng'
 
 
 auth_ = auth.HTTPBasicAuth(username, secrets.github_api_key)
@@ -44,10 +47,11 @@ slack_str = (
     'https://github.com/JesseAldridge/code_review_scoreboard'.format(
         results, results[0][0] if results and results[0] else 'nobody'))
 
-print 'slack_str:', urllib.quote(slack_str)
+print 'slack_str:', slack_str
 
 url = (
     'https://slack.com/api/chat.postMessage?token={}'
-    '&channel=%23_eng_backend&text={}&pretty=1').format(
-    secrets.slack_api_key, urllib.quote(slack_str))
+    '&channel={}&text={}&pretty=1').format(
+    urllib.quote(channel), secrets.slack_api_key, urllib.quote(slack_str))
+print 'url:', url
 requests.post(url)
