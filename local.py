@@ -1,4 +1,5 @@
 import json, urllib
+from datetime import datetime
 
 from requests import auth
 import requests
@@ -8,13 +9,7 @@ import secrets
 testing = False
 
 username = 'JesseAldridge'
-
 repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api'
-channel = '#_eng_backend'
-
-# repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform'
-# channel = '#eng'
-
 
 auth_ = auth.HTTPBasicAuth(username, secrets.github_api_key)
 name_to_count = {}
@@ -44,16 +39,6 @@ for page in range(1, 3) if testing else range(1, 5):
 results = list(sorted(name_to_count.iteritems(), key=lambda t: -t[-1]))
 print 'results:', results
 
-slack_str = (
-    'Code review scoreboard: {};  Good job {}!  '
-    'https://github.com/JesseAldridge/code_review_scoreboard'.format(
-        results, results[0][0] if results and results[0] else 'nobody'))
+with open('results.txt', 'a') as f:
+    f.write('{} {}\n'.format(datetime.now(), results))
 
-print 'slack_str:', slack_str
-
-url = (
-    'https://slack.com/api/chat.postMessage?token={}'
-    '&channel={}&text={}&pretty=1').format(
-    secrets.slack_api_key, urllib.quote(channel), urllib.quote(slack_str))
-print 'url:', url
-requests.post(url)
