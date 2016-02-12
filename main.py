@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import json, urllib
 
 from requests import auth

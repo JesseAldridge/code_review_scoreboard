@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import json, urllib, os
 from datetime import datetime
 import logging
