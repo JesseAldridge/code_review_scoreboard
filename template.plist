@@ -12,12 +12,14 @@
   <string>{log_dir}/code_review_scoreboard.log</string>
   <key>StandardErrorPath</key>
   <string>{log_dir}/code_review_scoreboard.err</string>
+  <key>WorkingDirectory</key>
+  <string>{script_dir}</string>
   <key>StartCalendarInterval</key>
   <dict>
       <key>Hour</key>
       <integer>16</integer>
       <key>Minute</key>
-      <integer>22</integer>
+      <integer>32</integer>
   </dict>
 </dict>
 </plist>
