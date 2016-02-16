@@ -4,7 +4,7 @@ import json, urllib
 from requests import auth
 import requests
 
-import secrets
+import pull, secrets
 
 testing = False
 
@@ -14,7 +14,8 @@ channel = '#_eng_backend'
 # repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform'
 # channel = '#eng'
 
-results = pull.pull(repo_url, testing)
+puller = pull.Puller(repo_url, testing)
+results = puller.pull_recent()
 
 slack_str = (
     'Code review scoreboard: {};  Good job {}!  '
