@@ -29,4 +29,4 @@ url = (
     '&channel={}&text={}&pretty=1').format(
     secrets.slack_api_key, urllib.quote(channel), urllib.quote(slack_str))
 print 'url:', url
-# requests.post(url)
+requests.post(url)
