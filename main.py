@@ -8,11 +8,11 @@ import pull, secrets
 
 testing = False
 
-repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api'
-channel = '#_eng_backend'
+# repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api'
+# channel = '#_eng_backend'
 
-# repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform'
-# channel = '#eng'
+repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform'
+channel = '#eng'
 
 puller = pull.Puller(repo_url, testing)
 results = puller.pull_recent()
