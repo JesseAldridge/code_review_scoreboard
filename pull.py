@@ -21,8 +21,9 @@ class User:
         self.comments = []
 
     def to_report(self):
-        return '({}, score: {}, total chars: {}, merges: {})'.format(
-            self.name, self.score, self.get_total_chars(), self.merges)
+        # return '({}, score: {}, total chars: {}, merges: {})'.format(
+        #     self.name, self.score, self.get_total_chars(), self.merges)
+        return '({}, {})'.format(self.name, self.score)
 
     def get_total_chars(self):
         return sum((len(comment['body']) for comment in self.comments))
@@ -106,10 +107,10 @@ class Puller:
         self.name_to_user[name].score += 1
 
 if __name__ == '__main__':
-    testing = False
+    testing = True
 
-    repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform'
-    # repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api'
+    # repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform'
+    repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api'
 
     puller = Puller(repo_url, testing)
 
