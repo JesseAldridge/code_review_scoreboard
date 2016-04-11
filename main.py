@@ -20,7 +20,7 @@ results = puller.pull_recent()
 slack_str = (
     'Code review scoreboard: {};  Good job {}!  '
     'https://github.com/JesseAldridge/code_review_scoreboard'.format(
-        results, results[0][0] if results and results[0] else 'nobody'))
+        results, results[0]['name'] if results and results[0] else 'nobody'))
 
 print 'slack_str:', slack_str
 

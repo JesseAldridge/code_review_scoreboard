@@ -2,7 +2,7 @@
 import json, urllib, os
 from datetime import datetime
 import logging
-import pylab
+from matplotlib import pyplot
 
 from requests import auth
 import requests
@@ -20,10 +20,10 @@ class User:
         self.merges = 0
         self.comments = []
 
-    def to_report(self):
+    def to_dict(self):
         # return '({}, score: {}, total chars: {}, merges: {})'.format(
         #     self.name, self.score, self.get_total_chars(), self.merges)
-        return '({}, {})'.format(self.name, self.score)
+        return {"name": self.name, "score": self.score}
 
     def get_total_chars(self):
         return sum((len(comment['body']) for comment in self.comments))
@@ -91,16 +91,16 @@ class Puller:
 
             xs = [x for x in range(len(ordered_users))]
             ys = [get_val(user) for user in ordered_users]
-            pylab.bar(xs, ys)
-            pylab.xticks(
+            pyplot.bar(xs, ys)
+            pyplot.xticks(
                 [x + .25 for x in range(len(xs))], [user.name[:5] for user in ordered_users])
-            pylab.savefig('total_{}.png'.format(attr))
-            pylab.cla()
+            pyplot.savefig('total_{}.png'.format(attr))
+            pyplot.cla()
 
         users_by_score = sorted(self.name_to_user.values(), key=lambda user: -user.score)
-        results_str = [u.to_report() for u in users_by_score]
-        print 'results_str:', results_str
-        return results_str
+        results = [u.to_dict() for u in users_by_score]
+        print 'results:', results
+        return results
 
     def increment(self, name):
         self.name_to_user.setdefault(name, User(name))
@@ -114,7 +114,15 @@ if __name__ == '__main__':
 
     puller = Puller(repo_url, testing)
 
-    results = puller.pull_recent()
+    new_results = puller.pull_recent()
 
-    # with open('results.txt', 'a') as f:
-    #     f.write('{} {}\n'.format(datetime.now(), results))
+    if testing:
+        all_results = []
+        if os.path.exists('results.json'):
+            with open('results.json') as f:
+                all_results_json = f.read()
+            all_results = json.loads(all_results_json)
+        all_results.append({'datetime': datetime.now().isoformat(), 'scores': new_results})
+        all_results_json = json.dumps(all_results, indent=2)
+        with open('results.json', 'w') as f:
+            f.write(all_results_json)
