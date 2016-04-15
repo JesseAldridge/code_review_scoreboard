@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import json, urllib, os
+import json, urllib, os, sys
 from datetime import datetime
 import logging
 from matplotlib import pyplot
@@ -11,6 +11,7 @@ import secrets
 
 logging.basicConfig(filename=os.path.expanduser("~/all_prs.log"), level=logging.DEBUG)
 logger = logging.getLogger('all_prs')
+logger.debug("beginning run at {}".format(datetime.now()))
 
 
 class User:
@@ -107,7 +108,7 @@ class Puller:
         self.name_to_user[name].score += 1
 
 if __name__ == '__main__':
-    testing = True
+    testing = ('test' in sys.argv[-1])
 
     # repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform'
     repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api'
@@ -116,13 +117,14 @@ if __name__ == '__main__':
 
     new_results = puller.pull_recent()
 
-    if testing:
-        all_results = []
-        if os.path.exists('results.json'):
-            with open('results.json') as f:
-                all_results_json = f.read()
-            all_results = json.loads(all_results_json)
-        all_results.append({'datetime': datetime.now().isoformat(), 'scores': new_results})
-        all_results_json = json.dumps(all_results, indent=2)
+    all_results = []
+    if os.path.exists('results.json'):
+        with open('results.json') as f:
+            all_results_json = f.read()
+        all_results = json.loads(all_results_json)
+    all_results.append({'datetime': datetime.now().isoformat(), 'scores': new_results})
+    all_results_json = json.dumps(all_results, indent=2)
+    print 'writing:', all_results_json
+    if not testing:
         with open('results.json', 'w') as f:
             f.write(all_results_json)
