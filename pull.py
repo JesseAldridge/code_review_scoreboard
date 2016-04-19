@@ -121,7 +121,10 @@ if __name__ == '__main__':
     if os.path.exists('results.json'):
         with open('results.json') as f:
             all_results_json = f.read()
-        all_results = json.loads(all_results_json)
+        try:
+            all_results = json.loads(all_results_json)
+        except ValueError:
+            sys.stderr.write("Error loading json: {}\n".format(all_results_json))
     all_results.append({'datetime': datetime.now().isoformat(), 'scores': new_results})
     all_results_json = json.dumps(all_results, indent=2)
     print 'writing:', all_results_json
