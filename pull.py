@@ -22,9 +22,7 @@ class User:
         self.comments = []
 
     def to_dict(self):
-        # return '({}, score: {}, total chars: {}, merges: {})'.format(
-        #     self.name, self.score, self.get_total_chars(), self.merges)
-        return {"name": self.name, "score": self.score}
+        return {"name": self.name, "score": self.score, "total_chars": self.get_total_chars()}
 
     def get_total_chars(self):
         return sum((len(comment['body']) for comment in self.comments))
@@ -99,9 +97,10 @@ class Puller:
             pyplot.cla()
 
         users_by_score = sorted(self.name_to_user.values(), key=lambda user: -user.score)
-        results = [u.to_dict() for u in users_by_score]
-        print 'results:', results
-        return results
+        user_dicts = [u.to_dict() for u in users_by_score]
+        print 'user_dicts:', user_dicts
+        return user_dicts
+
 
     def increment(self, name):
         self.name_to_user.setdefault(name, User(name))
