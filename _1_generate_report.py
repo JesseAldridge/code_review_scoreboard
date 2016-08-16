@@ -64,10 +64,11 @@ slack_str = textwrap.dedent('''
     Good job {best_name}!
     Total characters typed:
     {bars_str}
-    Full report:  http://54.183.41.231/{report_name}
+    Full report:  {host}/{report_name}
       Username:  {server_username}  Password:  {server_password}
     GitHub repo:  https://github.com/JesseAldridge/code_review_scoreboard
     ''').strip().format(
+        host=secrets.host,
         user_dicts=user_dicts, bars_str=bars_str, best_name=best_name, report_name=report_name,
         server_username=secrets.server_username, server_password=secrets.server_password)
 print 'slack_str:', slack_str
