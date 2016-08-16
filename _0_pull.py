@@ -2,7 +2,6 @@
 import json, urllib, os, sys
 from datetime import datetime
 import logging
-from matplotlib import pyplot
 
 from requests import auth
 import requests
@@ -21,8 +20,11 @@ class User:
         self.merges = 0
         self.comments = []
 
-    def to_dict(self):
+    def to_slack_dict(self):
         return {"name": self.name, "score": self.score, "total_chars": self.get_total_chars()}
+
+    def to_full_report_dict(self):
+        return {"name": self.name, "score": self.score, "comments:": self.comments}
 
     def get_total_chars(self):
         return sum((len(comment['body']) for comment in self.comments))
@@ -39,6 +41,8 @@ class Puller:
         self.name_to_user = {}
 
     def pull_page(self, page):
+        # Fill up the name_to_user dict with all comments on the page.
+
         print 'page:', page
 
         main_resp = requests.get('{}/pulls?state=all&page={}'.format(
@@ -80,7 +84,6 @@ class Puller:
         for page in range(1, 3) if self.testing else range(1, 5):
             self.pull_page(page)
 
-
         for attr in 'score', 'get_total_chars', 'merges':
             def get_val(user):
                 val = getattr(user, attr)
@@ -88,45 +91,29 @@ class Puller:
 
             ordered_users = sorted(self.name_to_user.values(), key=lambda user: -get_val(user))
 
-            xs = [x for x in range(len(ordered_users))]
-            ys = [get_val(user) for user in ordered_users]
-            pyplot.bar(xs, ys)
-            pyplot.xticks(
-                [x + .25 for x in range(len(xs))], [user.name[:5] for user in ordered_users])
-            pyplot.savefig('total_{}.png'.format(attr))
-            pyplot.cla()
-
         users_by_score = sorted(self.name_to_user.values(), key=lambda user: -user.score)
-        user_dicts = [u.to_dict() for u in users_by_score]
-        print 'user_dicts:', user_dicts
-        return user_dicts
+        return users_by_score
 
 
     def increment(self, name):
         self.name_to_user.setdefault(name, User(name))
         self.name_to_user[name].score += 1
 
-if __name__ == '__main__':
-    testing = ('test' in sys.argv[-1])
+def test(testing=('test' in sys.argv[-1])):
 
     # repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform'
     repo_url = 'https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api'
 
     puller = Puller(repo_url, testing)
+    users_by_score = puller.pull_recent()
 
-    new_results = puller.pull_recent()
+    all_results_json = json.dumps([user.to_slack_dict() for user in users_by_score], indent=2)
+    print 'slack_dicts:', all_results_json
 
-    all_results = []
-    if os.path.exists('results.json'):
-        with open('results.json') as f:
-            all_results_json = f.read()
-        try:
-            all_results = json.loads(all_results_json)
-        except ValueError:
-            sys.stderr.write("Error loading json: {}\n".format(all_results_json))
-    all_results.append({'datetime': datetime.now().isoformat(), 'scores': new_results})
-    all_results_json = json.dumps(all_results, indent=2)
-    print 'writing:', all_results_json
-    if not testing:
-        with open('results.json', 'w') as f:
-            f.write(all_results_json)
+    all_results_json = json.dumps(
+        [user.to_full_report_dict() for user in users_by_score], indent=2)
+    print 'full_dicts:', all_results_json
+
+
+if __name__ == '__main__':
+    test(testing=True)
