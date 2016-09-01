@@ -7,8 +7,9 @@ from flask import request, Response
 import secrets
 
 app = flask.Flask(__name__)
-port = int(os.environ.get('PORT', 3000))
 
+app.jinja_env.variable_start_string='{[{'
+app.jinja_env.variable_end_string='}]}'
 
 def check_auth(username, password):
     return username == secrets.server_username and password == secrets.server_password
@@ -43,9 +44,11 @@ def render(repo_name, timestamp):
             text = f.read()
     except IOError:
         return 'Report not found'
-    text = 'TODO: FORMATTING<br/>' + '-' * 50 + '<br/>' + text
-    return text
+
+    users_by_score = json.loads(text)
+
+    return flask.render_template('report.html', users_by_score=users_by_score)
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 3000.
-    app.run(host='0.0.0.0', port=port, debug=(port==3000))
+    app.run(host='0.0.0.0', port=secrets.port, debug=(secrets.port==3000))

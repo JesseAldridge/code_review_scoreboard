@@ -24,7 +24,7 @@ class User:
         return {"name": self.name, "score": self.score, "total_chars": self.get_total_chars()}
 
     def to_full_report_dict(self):
-        return {"name": self.name, "score": self.score, "comments:": self.comments}
+        return {"name": self.name, "score": self.score, "comments": self.comments}
 
     def get_total_chars(self):
         return sum((len(comment['body']) for comment in self.comments))

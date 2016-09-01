@@ -4,6 +4,7 @@ from datetime import datetime
 
 from requests import auth
 import requests
+import markdown
 
 import _0_pull, secrets
 
@@ -26,6 +27,11 @@ print 'channel:', channel
 puller = _0_pull.Puller(repo_url, testing)
 users_by_score = puller.pull_recent()
 
+for user in users_by_score:
+    markdown_comments = []
+    for comment in user.comments:
+        comment['body'] = markdown.markdown(comment['body'])
+
 print 'users_by_score:', users_by_score
 
 repo_name = '_'.join(repo_url.split('/')[-2:])
@@ -36,7 +42,10 @@ report_name = '{}/{}'.format(repo_name, timestamp_str)
 repo_path = os.path.join('reports', repo_name)
 if not os.path.exists(repo_path):
     os.makedirs(repo_path)
-out_text = json.dumps([user.to_full_report_dict() for user in users_by_score])
+
+
+
+out_text = json.dumps([user.to_full_report_dict() for user in users_by_score], indent=2)
 with codecs.open('reports/{}'.format(report_name), mode='w', encoding='utf8') as f:
     f.write(out_text)
 

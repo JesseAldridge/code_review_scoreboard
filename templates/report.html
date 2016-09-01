@@ -1,0 +1,35 @@
+<link rel='stylesheet' href='https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
+
+<style>
+.wrapper {
+  width: 10000px;
+}
+
+.user_column {
+  width:300px;
+  display:inline-block;
+  vertical-align: text-top;
+  word-wrap: break-word;
+}
+
+.comment {
+  overflow: scroll;
+}
+
+blockquote {
+  font-size: inherit;
+}
+</style>
+
+<div class='wrapper'>
+  {% for user in users_by_score %}
+    <div class='user_column'>
+      <h4>{[{user['name']}]}</h4>
+      {% for comment in user['comments'] %}
+        <div class='comment'>
+          {[{ comment['body']|safe }]}
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
