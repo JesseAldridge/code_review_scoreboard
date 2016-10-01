@@ -81,7 +81,7 @@ class Puller:
                     self.name_to_user[name].comments.append(comment)
 
     def pull_recent(self):
-        for page in range(1, 3) if self.testing else range(1, 5):
+        for page in range(1, 3) if self.testing else range(1, 7):
             self.pull_page(page)
 
         for attr in 'score', 'get_total_chars', 'merges':
@@ -116,4 +116,4 @@ def test(testing=('test' in sys.argv[-1])):
 
 
 if __name__ == '__main__':
-    test(testing=True)
+    test()
