@@ -1,0 +1,60 @@
+_2_run_loop.py
+  _1_generate_report.py
+    _0_pull.Puller.pull_recent
+      pull_page
+        requests.get('.../pulls?state=all&page={}')
+        for each pr:
+          requests.get(pr['_links']['review_comments']['href']
+
+pull_page
+  /repos/:owner/:repo/issues/comments
+
+
+Questions:
+  Does '.../comments' include inline and top-level comments?
+    Looks like it does not include inline
+
+  How are prs sorted?
+    created, by default
+    How do I want prs to be sorted?
+      I want to get all comments made in the last two weeks
+        Is there a field like "any activity"?
+          What is updated?
+            Does it include a comment being posted?
+              Look for a comment date that is more recent that pr.updated_at
+[
+  {
+    ...
+    "body": "### Summary:\r\nWhen assigning a double optin ticket to a ...",
+    ...
+    "updated_at": "2016-01-26T22:06:41Z",
+    "user": {
+      "following_url": "https://api.github.com/users/mishto/following{/other_user}",
+      "events_url": "https://api.github.com/users/mishto/events{/privacy}",
+      "organizations_url": "https://api.github.com/users/mishto/orgs",
+      "url": "https://api.github.com/users/mishto",
+      "gists_url": "https://api.github.com/users/mishto/gists{/gist_id}",
+      "html_url": "https://github.com/mishto",
+      "subscriptions_url": "https://api.github.com/users/mishto/subscriptions",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3527159?v=3",
+      "repos_url": "https://api.github.com/users/mishto/repos",
+      "received_events_url": "https://api.github.com/users/mishto/received_events",
+      "gravatar_id": "",
+      "starred_url": "https://api.github.com/users/mishto/starred{/owner}{/repo}",
+      "site_admin": false,
+      "login": "mishto",
+      "type": "User",
+      "id": 3527159,
+      "followers_url": "https://api.github.com/users/mishto/followers"
+    },
+    "milestone": null,
+    "locked": false,
+    "url": "https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api/pulls/2072",
+    "created_at": "2016-01-26T18:46:08Z",
+    "review_comments_url": "https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api/pulls/2072/comments",
+    "review_comment_url": "https://api.github.com/repos/gigwalk-corp/gigwalk_apps_platform_api/pulls/comments{/number}",
+    "patch_url": "https://github.com/gigwalk-corp/gigwalk_apps_platform_api/pull/2072.patch"
+  },
+  ...
+]
+
