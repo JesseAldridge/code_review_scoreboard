@@ -1,27 +1,44 @@
-_2_run_loop.py
-  _1_generate_report.py
-    _0_pull.Puller.pull_recent
-      pull_page
-        requests.get('.../pulls?state=all&page={}')
+current
+-------
+
+  _0_pull.Puller.pull_recent
+    pull_page
+      Get page of prs: /pulls?state=all&page={}
+        ordered by date created (I think)
         for each pr:
-          requests.get(pr['_links']['review_comments']['href']
+          Get top-level comments  pr['_links']['comments']['href']
+          Get review comments  pr['_links']['review_comments']['href']
 
-pull_page
-  /repos/:owner/:repo/issues/comments
+    pull_recent
+      for i in range(1, 7)
+        pull_page(page)
+
+next
+----
+
+  _0_pull.Puller.pull_recent
+    pull_recent
+      pull top level comments since date
+      pull inline comments since date (review_comments(?))
+        make sure we continue to exclude pr creator
+        make sure return format matches previous
+
+      Try all of the following urls to figure out which one we want:
+        test in temp_recent_comments.py
+
+        Update "stuff/sample json"(?)
+
+        /repos/:owner/:repo/issues/comments
+          Does this include inline and top-level comments?
+            no, only top-level
+
+        /repos/:owner/:repo/issues/pulls/comments
+          Does this include inline and top-level comments?
+
+        /repos/:owner/:repo/pulls/comments
+          so there are three ways to pull comments?
 
 
-Questions:
-  Does '.../comments' include inline and top-level comments?
-    Looks like it does not include inline
-
-  How are prs sorted?
-    created, by default
-    How do I want prs to be sorted?
-      I want to get all comments made in the last two weeks
-        Is there a field like "any activity"?
-          What is updated?
-            Does it include a comment being posted?
-              Look for a comment date that is more recent that pr.updated_at
 [
   {
     ...
