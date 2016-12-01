@@ -27,6 +27,8 @@ print 'channel:', channel
 puller = _0_pull.Puller(repo_url, testing)
 users_by_score = puller.pull_recent()
 
+users_by_score = [user for user in users_by_score if user.name not in secrets.ignore_users]
+
 for user in users_by_score:
     markdown_comments = []
     for comment in user.comments:
